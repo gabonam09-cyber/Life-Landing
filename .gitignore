@@ -1,0 +1,14 @@
+# entorno virtual (aqui es un enlace simbolico a una ruta local)
+.venv/
+.venv
+
+# secretos y base de datos con leads: nunca deben subir
+.env
+instance/
+
+# python
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store

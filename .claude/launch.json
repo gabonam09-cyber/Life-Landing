@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "life-web",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "source .venv/bin/activate && uvicorn main:app --host 127.0.0.1 --port $PORT --reload"],
+      "port": 5000
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Panel — life{% endblock %}
+{% block content %}
+
+<div class="login-box">
+  <div class="s-eyebrow">Panel privado</div>
+  <h2>Acceso</h2>
+
+  <form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="field">
+      {{ form.usuario.label }}
+      {{ form.usuario(placeholder="Usuario", autocomplete="username") }}
+    </div>
+    <div class="field">
+      {{ form.contrasena.label }}
+      {{ form.contrasena(placeholder="Contraseña", autocomplete="current-password") }}
+    </div>
+    <button type="submit" class="btn">Entrar</button>
+  </form>
+</div>
+
+{% endblock %}
