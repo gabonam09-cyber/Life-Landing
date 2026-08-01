@@ -1,0 +1,47 @@
+# Configuracion de despliegue para Render (Blueprint).
+# Crea el servicio web y la base Postgres, y los conecta entre si.
+#
+# SECRET_KEY la genera Render sola (generateValue), asi que nadie tiene que
+# manejarla a mano. Las marcadas con `sync: false` NO viajan en el repo: hay que
+# escribirlas en el panel de Render (Environment) despues del primer despliegue.
+
+services:
+  - type: web
+    name: life-landing
+    runtime: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.3
+
+      - key: FLASK_ENV
+        value: production
+
+      # Las cookies de sesion solo viajan por HTTPS. Render sirve HTTPS siempre.
+      - key: FORCE_HTTPS
+        value: "true"
+
+      # Render genera un valor aleatorio y lo guarda; no se escribe en el repo.
+      - key: SECRET_KEY
+        generateValue: true
+
+      # Credenciales del panel /panel: se cargan a mano en el panel de Render.
+      - key: ADMIN_USER
+        sync: false
+      - key: ADMIN_PASSWORD_HASH
+        sync: false
+
+      # Cadena de conexion inyectada por la base de datos de abajo.
+      - key: DATABASE_URL
+        fromDatabase:
+          name: life-db
+          property: connectionString
+
+databases:
+  - name: life-db
+    plan: free
+    region: oregon

@@ -1,13 +1,29 @@
 import os
 
 
+def _normalizar_url_bd(url):
+    """Adapta la URL de Postgres que entregan los hosts al formato de SQLAlchemy 2.
+
+    Render (como Heroku) publica DATABASE_URL con el esquema `postgres://`, que
+    SQLAlchemy 2 ya no reconoce. Ademas, sin driver explicito intentaria usar
+    psycopg2, que no esta instalado: aqui se usa psycopg 3.
+    """
+    if url.startswith("postgres://"):
+        url = url.replace("postgres://", "postgresql://", 1)
+    if url.startswith("postgresql://"):
+        url = url.replace("postgresql://", "postgresql+psycopg://", 1)
+    return url
+
+
 class Config:
     # Nunca hardcodear secretos: todo viene de variables de entorno (.env)
     SECRET_KEY = os.environ.get("SECRET_KEY")
 
-    # Ruta relativa: Flask-SQLAlchemy la resuelve automaticamente contra
-    # app.instance_path (la carpeta instance/), no hace falta anteponer "instance/".
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL", "sqlite:///life.db")
+    # En local, ruta relativa: Flask-SQLAlchemy la resuelve contra
+    # app.instance_path (la carpeta instance/). En produccion llega un Postgres.
+    SQLALCHEMY_DATABASE_URI = _normalizar_url_bd(
+        os.environ.get("DATABASE_URL", "sqlite:///life.db")
+    )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     ADMIN_USER = os.environ.get("ADMIN_USER", "admin")
