@@ -4,20 +4,23 @@
 
 <section class="hero" style="border-top:none;">
 
-  <div class="hero-pill" data-hero-in>Diagnóstico digital gratuito</div>
+  <div class="hero-pill hero-pill--brand" data-hero-in>life</div>
 
   <div class="hero-grid">
     <div>
-      <h1 class="hero-headline" data-hero-in><span class="hl-ghost">¿Tus ventas</span><em>no suben</em> como deberían?</h1>
-      <p class="hero-copy" data-hero-in>Chatbots con IA, presencia digital y reputación — en un solo sistema.</p>
+      <h1 class="hero-headline" data-hero-in><span class="hl-ghost">Tu clínica</span><em>pierde pacientes</em> cada vez que nadie contesta</h1>
+      <p class="hero-copy" data-hero-in>
+        Agenda llena y respuesta 24/7, sin que tu recepción conteste lo mismo todo el día.
+        <strong>Sistema funcionando en 14 días.</strong>
+      </p>
       <div class="hero-actions" data-hero-in>
-        <button type="button" class="btn" data-open-modal>Agenda tu diagnóstico gratis</button>
-        <a href="#servicios" class="btn btn-outline">Ver los 3 sistemas</a>
+        <a href="#video" class="btn">Ver el video</a>
+        <a href="#incluye" class="btn btn-outline">Ver qué incluye</a>
       </div>
     </div>
 
     <div data-hero-in>
-      <div class="video-mock">
+      <div class="video-mock" id="video">
         <div class="play-btn"></div>
       </div>
       <p class="video-caption">Mira cómo funciona en 90 segundos</p>
@@ -27,54 +30,48 @@
 </section>
 
 <section class="cta-section" style="border-top:none; padding-top:0;">
-  <button type="button" class="cta-button" data-open-modal>
-    <span class="cta-button-title">Solicita tu diagnóstico estratégico</span>
-    <span class="cta-button-sub">Primero analizamos tu negocio. Si vemos una oportunidad real de mejora, avanzamos.</span>
-  </button>
+  <a href="#video" class="cta-button">
+    <span class="cta-button-title">Ver el video</span>
+    <span class="cta-button-sub">En 90 segundos te explicamos cómo funciona el sistema dentro de una clínica.</span>
+  </a>
 
   <div class="founders-row">
     <div class="founders-avatars">
       <div class="founder-avatar">G</div>
       <div class="founder-avatar">+</div>
     </div>
-    <p class="founders-note">No trabajamos con todos. Primero evaluamos si existe una oportunidad real para ayudar.</p>
-  </div>
-</section>
-
-<section class="trust-bar">
-  <div class="trust-label">Formados en</div>
-  <div class="trust-marquee">
-    <div class="trust-track">
-      {% for _ in range(2) %}
-      <div class="trust-track-half">
-        {% for _ in range(5) %}
-        <div class="trust-logo trust-logo--udemy">
-          <img src="{{ url_for('static', filename='img/logo-udemy-crop.png') }}" alt="">
-          Udemy
-        </div>
-        <div class="trust-logo trust-logo--funnel">
-          <img src="{{ url_for('static', filename='img/logo-funnelschool-crop.png') }}" alt="">
-          Funnel School
-        </div>
-        <div class="trust-logo trust-logo--unam">
-          <img src="{{ url_for('static', filename='img/logo-unam-crop.png') }}" alt="">
-          UNAM
-        </div>
-        {% endfor %}
-      </div>
-      {% endfor %}
-    </div>
+    <p class="founders-note">Trabajamos con 3 clínicas nuevas al mes, para que cada implementación sea personalizada.</p>
   </div>
 </section>
 
 <section id="insight" class="section--alt" data-reveal>
   <div class="s-eyebrow" style="text-align:left;">
-    <span class="hero-pill" style="margin-top:0;">Por qué los negocios trabajan con life</span>
+    <span class="hero-pill" style="margin-top:0;">El error que casi nadie ve</span>
   </div>
   <h2 class="insight-headline" style="font-style:normal; margin-top:26px;">
-    El 95% de los negocios en CDMX comete el mismo error <strong>SILENCIOSO</strong>
+    Tu próximo paciente ya te escribió.<br>Y sigue <strong>esperando respuesta</strong>
   </h2>
-  <p class="insight-sub">Nadie responde a tiempo. Ahí es exactamente donde se pierden los clientes.</p>
+  <p class="insight-sub">
+    No se fue con la clínica de enfrente porque fuera mejor. Se fue porque contestó primero.
+  </p>
+</section>
+
+<section id="creencias" class="beliefs-section" data-reveal>
+  <div class="s-eyebrow" style="text-align:center;">
+    <span class="hero-pill" style="margin-top:0;">Lo que probablemente estás pensando</span>
+  </div>
+  <h2 class="systems-headline" style="text-align:center; margin:26px auto 60px; max-width:820px;">
+    Lo que nos dicen antes de agendar
+  </h2>
+
+  <div class="beliefs-list">
+    {% for item in creencias %}
+    <div class="belief">
+      <p class="belief-myth">{{ item.creencia }}</p>
+      <p class="belief-truth">{{ item.respuesta }}</p>
+    </div>
+    {% endfor %}
+  </div>
 </section>
 
 <section id="sistema" class="compare-section" data-reveal>
@@ -88,18 +85,18 @@
   <div class="compare-grid">
     <div class="compare-col compare-col--bad">
       <div class="compare-col-label">Tácticas aisladas</div>
-      <div class="compare-item">Publicas contenido, pero nadie en tu equipo responde a tiempo cuando alguien pregunta.</div>
-      <div class="compare-item">Corres anuncios, pero llegan a un WhatsApp que se atiende "cuando se puede".</div>
-      <div class="compare-item">Tienes buenas reseñas, pero las malas se quedan sin respuesta y le ganan a las buenas.</div>
-      <div class="compare-item">Cada esfuerzo vive por su lado: nadie conecta captación con respuesta con reputación.</div>
+      <div class="compare-item">Publicas en Instagram, pero los mensajes que llegan se contestan "cuando se puede".</div>
+      <div class="compare-item">Pagas anuncios que atraen preguntones de precio, no pacientes que se traten.</div>
+      <div class="compare-item">Tienes pacientes contentos, pero nadie les pide la reseña en Google Maps.</div>
+      <div class="compare-item">Cientos de pacientes cotizaron y nunca volvieron, y ahí siguen en la libreta.</div>
     </div>
 
     <div class="compare-col compare-col--good">
       <div class="compare-col-label">Sistema life</div>
-      <div class="compare-item">Sistema de captación: apareces exactamente donde tu cliente ya te está buscando.</div>
-      <div class="compare-item">Sistema de respuesta: la IA contesta y agenda al instante, 24/7, sin que se te escape nadie.</div>
-      <div class="compare-item">Sistema de reputación: cada reseña se monitorea y responde, protegiendo tu calificación.</div>
-      <div class="compare-item">Los tres sistemas trabajan juntos, como un solo flujo — no como esfuerzos sueltos.</div>
+      <div class="compare-item">Captación: apareces en Google cuando buscan tu especialidad en tu zona.</div>
+      <div class="compare-item">Respuesta: la IA contesta y agenda al instante, de madrugada y en domingo.</div>
+      <div class="compare-item">Reputación: las reseñas se responden todas y las buenas se piden solas.</div>
+      <div class="compare-item">La base dormida se reactiva sola: quien cotizó hace meses vuelve a recibir noticias.</div>
     </div>
   </div>
 </section>
@@ -108,9 +105,13 @@
   <div class="systems-head">
     <span class="hero-pill" style="margin-top:0;">Qué hace life</span>
     <h2 class="systems-headline">
-      No hacemos publicidad genérica.<br>Construimos sistemas que responden por ti
+      No improvisamos campañas.<br>Implementamos un método completo
     </h2>
-    <p class="systems-sub">Tu próximo cliente ya te está buscando. Se pierde en el primer mensaje sin respuesta.</p>
+    <p class="systems-sub">
+      Un solo sistema, apoyado en inteligencia artificial, que trabaja sobre las tres palancas
+      a la vez: vender más, recuperar a los pacientes que se enfriaron y hacer que los actuales
+      regresen.
+    </p>
   </div>
 
   <div class="systems-grid">
@@ -123,8 +124,8 @@
         <span class="system-label">Sistema de captación</span>
       </div>
       <div class="system-card-body">
-        <h3>Atraer clientes que ya te buscan, no solo tráfico.</h3>
-        <p>Sitio web, Google Business y posicionamiento local para que aparezcas cuando alguien busca tu servicio.</p>
+        <h3>Atraer pacientes que ya buscan tu tratamiento.</h3>
+        <p>Google Business, reseñas y anuncios que filtran curiosos para que llegues a quien sí va a tratarse.</p>
         <div class="system-tags">
           <span class="tag">Web</span>
           <span class="tag">Google Business</span>
@@ -142,8 +143,8 @@
         <span class="system-label">Sistema de respuesta</span>
       </div>
       <div class="system-card-body">
-        <h3>Responder y agendar antes de que se vayan con la competencia.</h3>
-        <p>Chatbots con IA que contestan por WhatsApp e Instagram 24/7 y agendan la cita solos.</p>
+        <h3>Responder y agendar antes de que llamen a la clínica de enfrente.</h3>
+        <p>IA que contesta WhatsApp e Instagram 24/7, agenda la cita y recuerda antes de la consulta.</p>
         <div class="system-tags">
           <span class="tag">WhatsApp</span>
           <span class="tag">IA</span>
@@ -161,8 +162,8 @@
         <span class="system-label">Sistema de reputación</span>
       </div>
       <div class="system-card-body">
-        <h3>Convertir cada reseña en más clientes, no en dudas.</h3>
-        <p>Monitoreo y respuesta de reseñas, encuestas automáticas post-visita para proteger tu calificación.</p>
+        <h3>Que el paciente regrese, y que lo cuente.</h3>
+        <p>Seguimiento post-tratamiento, reactivación de quien cotizó y reseñas en Google Maps.</p>
         <div class="system-tags">
           <span class="tag">Reseñas</span>
           <span class="tag">Encuestas</span>
@@ -173,25 +174,37 @@
   </div>
 </section>
 
-<section id="proceso" class="steps-section" data-reveal>
-  <div class="s-eyebrow" style="text-align:center;">Sistema life</div>
-  <h2 class="steps-headline">Primero entendemos.<br>Después ejecutamos.</h2>
+<section id="incluye" class="includes-section" data-reveal>
+  <div class="systems-head">
+    <span class="hero-pill" style="margin-top:0;">Qué incluye</span>
+    <h2 class="systems-headline" style="max-width:820px;">
+      Todo esto funcionando como un solo sistema
+    </h2>
+    <p class="systems-sub">
+      No son servicios sueltos que contratas por separado. Se implementa completo y conectado.
+    </p>
+  </div>
 
-  <div class="steps-timeline">
-    {% for paso in pasos %}
-    <div class="step">
-      <div class="step-media">
-        {% if paso.imagen %}
-        <img src="{{ paso.imagen }}" alt="{{ paso.titulo }}">
-        {% else %}
-        <div class="step-media-ph">Imagen {{ paso.n }}</div>
-        {% endif %}
-      </div>
-      <div class="step-num">{{ paso.n }}</div>
-      <div class="step-body">
-        <h3>{{ paso.titulo }}</h3>
-        <p>{{ paso.texto }}</p>
-      </div>
+  <ul class="includes-list">
+    {% for item in incluye %}
+    <li>{{ item }}</li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section id="resultados" class="results-section section--alt" data-reveal>
+  <div class="systems-head">
+    <span class="hero-pill" style="margin-top:0;">A partir del día 14</span>
+    <h2 class="systems-headline" style="max-width:860px;">
+      Así se ve tu clínica cuando el sistema ya está trabajando
+    </h2>
+  </div>
+
+  <div class="results-grid">
+    {% for item in resultados %}
+    <div class="result-card">
+      <h3>{{ item.titulo }}</h3>
+      <p>{{ item.texto }}</p>
     </div>
     {% endfor %}
   </div>
@@ -199,35 +212,32 @@
 
 <section id="nosotros" data-reveal>
   <div class="s-eyebrow">Nosotros</div>
-  <h2>Una agencia joven, enfocada en resultados</h2>
-  <p class="s-sub">
-    Somos una agencia fundada por dos socios en Ciudad de México. Combinamos marketing digital
-    con inteligencia artificial aplicada, para negocios que necesitan resultados concretos, no
-    reportes complicados.
-  </p>
-</section>
-
-<section id="casos" data-reveal>
-  <div class="s-eyebrow">Casos de éxito</div>
-  <h2>Estamos construyendo nuestros primeros casos</h2>
-  <p class="s-sub">
-    Estamos trabajando con nuestros primeros clientes fundadores. Muy pronto documentaremos
-    resultados reales aquí, con métricas verificables.
-  </p>
-  <div class="grid" style="margin-top:30px;">
-    <div class="placeholder-card">Próximamente: primer caso documentado</div>
-    <div class="placeholder-card">Próximamente: primer caso documentado</div>
-    <div class="placeholder-card">Próximamente: primer caso documentado</div>
+  <h2>Empezamos por hartazgo</h2>
+  <div class="about-copy">
+    <p>
+      Somos dos socios en Ciudad de México. Antes de montar life nos pasábamos el día revisando
+      negocios: clínicas, talleres, spas, tiendas. Y en casi todos encontrábamos la misma escena.
+    </p>
+    <p>
+      El consultorio invirtiendo en anuncios. Los mensajes entrando. Y una bandeja de WhatsApp
+      con veinte pacientes sin responder desde el martes. Nadie era culpable: quien contestaba
+      también recibía en recepción, cobraba y cuadraba la agenda del día.
+    </p>
+    <p>
+      Nos cansamos de ver clínicas buenas perdiendo pacientes por algo tan evitable como no alcanzar
+      a contestar. Por eso life no vende campañas sueltas: montamos el sistema que responde,
+      agenda y cuida tu reputación mientras tú haces tu trabajo.
+    </p>
   </div>
 </section>
 
 <section id="faq" class="faq-section" data-reveal>
   <div class="faq-head">
     <span class="hero-pill">Preguntas frecuentes</span>
-    <h2 class="faq-headline">Lo que necesitas saber antes de pedir tu diagnóstico.</h2>
+    <h2 class="faq-headline">Lo que suelen preguntarnos antes de agendar.</h2>
     <p class="faq-sub">
-      No trabajamos con todos los negocios. Primero entendemos el tuyo, revisamos cómo
-      atiendes a tus clientes y definimos si existe una oportunidad real para avanzar.
+      Si tu duda no está aquí, la resolvemos en la reunión. Son 30 minutos y no te
+      compromete a nada.
     </p>
   </div>
 
@@ -249,8 +259,8 @@
 
 <section id="contacto" class="final-cta-section section--alt" data-reveal>
   <button type="button" class="cta-button cta-button--final" data-open-modal>
-    <span class="cta-button-title">Solicita tu diagnóstico estratégico</span>
-    <span class="cta-button-sub">Primero analizamos tu negocio. Si vemos una oportunidad real de mejora, avanzamos.</span>
+    <span class="cta-button-title">Agenda tu reunión por Zoom</span>
+    <span class="cta-button-sub">30 minutos, sin costo. Revisamos tu clínica y te explicamos la propuesta. No se firma nada en esa llamada.</span>
   </button>
 </section>
 
@@ -266,8 +276,8 @@
       <span class="contact-progress-fill"></span>
     </div>
 
-    <h2 class="contact-headline" id="modal-titulo">Estás a un paso de dejar de <em>perder clientes</em></h2>
-    <p class="contact-lead">Agenda tu diagnóstico digital, sin costo.</p>
+    <h2 class="contact-headline" id="modal-titulo">Agenda tu reunión por <em>Zoom</em></h2>
+    <p class="contact-lead">30 minutos, sin costo. Te escribimos para cuadrar el horario que te venga bien.</p>
 
     <form class="contact-form" method="POST" action="{{ url_for('main.contacto') }}">
       {{ form.hidden_tag() }}
@@ -275,19 +285,23 @@
       <div class="contact-fields">
         <div class="field">
           {{ form.nombre.label(class="sr-only") }}
-          {{ form.nombre(placeholder="Nombre completo") }}
+          {{ form.nombre(placeholder="Tu nombre") }}
+        </div>
+        <div class="field">
+          {{ form.clinica.label(class="sr-only") }}
+          {{ form.clinica(placeholder="Nombre de tu clínica o spa") }}
+        </div>
+        <div class="field">
+          {{ form.telefono.label(class="sr-only") }}
+          {{ form.telefono(placeholder="WhatsApp") }}
         </div>
         <div class="field">
           {{ form.email.label(class="sr-only") }}
           {{ form.email(placeholder="Correo") }}
         </div>
         <div class="field">
-          {{ form.telefono.label(class="sr-only") }}
-          {{ form.telefono(placeholder="Teléfono (opcional)") }}
-        </div>
-        <div class="field">
           {{ form.mensaje.label(class="sr-only") }}
-          {{ form.mensaje(placeholder="¿Qué necesita tu negocio?") }}
+          {{ form.mensaje(placeholder="¿Qué es lo que más te está costando ahora mismo?") }}
         </div>
       </div>
 
@@ -297,8 +311,8 @@
         {{ form.sitio_web(tabindex="-1", autocomplete="off") }}
       </div>
 
-      <button type="submit" class="contact-submit">Agendar mi diagnóstico</button>
-      <p class="contact-note">Te contactamos en menos de 24 horas.</p>
+      <button type="submit" class="contact-submit">Quiero mi reunión</button>
+      <p class="contact-note">Te contactamos en menos de 24 horas · No se firma nada en la llamada</p>
     </form>
   </div>
 </div>

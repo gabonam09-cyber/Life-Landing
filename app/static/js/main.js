@@ -211,21 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   });
 
-  // Pasos del proceso: cada uno entra desde el lado donde vive su imagen
-  document.querySelectorAll('.step').forEach((step, i) => {
-    const desdeLaDerecha = i % 2 === 1;
-    gsap.fromTo(step,
-      { opacity: 0, x: desdeLaDerecha ? 60 : -60 },
-      {
-        opacity: 1, x: 0, duration: 0.75, ease: EASE,
-        scrollTrigger: {
-          trigger: step, start: 'top 85%', end: 'bottom 15%',
-          toggleActions: AMBOS_SENTIDOS,
-        },
-      }
-    );
-  });
-
   // Preguntas del FAQ: aparecen en cascada
   gsap.fromTo('.faq-item',
     { opacity: 0, y: 24 },

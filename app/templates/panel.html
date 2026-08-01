@@ -5,13 +5,14 @@
 <section style="border-top:none; padding-top: 50px;">
   <div class="s-eyebrow">Panel privado</div>
   <h2>Mensajes recibidos ({{ leads|length }})</h2>
-  <p class="s-sub"><a href="{{ url_for('main.panel_logout') }}" style="color:var(--sage);">Cerrar sesión</a></p>
+  <p class="s-sub"><a href="{{ url_for('main.panel_logout') }}" style="color:var(--lime);">Cerrar sesión</a></p>
 
   <table class="panel-table">
     <thead>
       <tr>
         <th>Fecha</th>
         <th>Nombre</th>
+        <th>Clínica</th>
         <th>Email</th>
         <th>Teléfono</th>
         <th>Mensaje</th>
@@ -22,12 +23,13 @@
       <tr>
         <td>{{ lead.creado_en.strftime("%Y-%m-%d %H:%M") }}</td>
         <td>{{ lead.nombre }}</td>
+        <td>{{ lead.clinica or "—" }}</td>
         <td>{{ lead.email }}</td>
         <td>{{ lead.telefono or "—" }}</td>
         <td>{{ lead.mensaje }}</td>
       </tr>
       {% else %}
-      <tr><td colspan="5">Todavía no hay mensajes.</td></tr>
+      <tr><td colspan="6">Todavía no hay mensajes.</td></tr>
       {% endfor %}
     </tbody>
   </table>

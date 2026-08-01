@@ -60,7 +60,7 @@ body::before{
 
 /* Etiquetas y numeros en monoespaciada: es el detalle que sostiene el look
    tecnico de jaygood (numeracion /01, /02 y microcopys en mayuscula). */
-.mono, .s-eyebrow, .system-label, .trust-label, .step-num, .faq-num,
+.mono, .s-eyebrow, .system-label, .faq-num,
 .system-number, .hero-pill, .video-caption{
   font-family: 'Space Mono', ui-monospace, monospace;
 }
@@ -116,6 +116,13 @@ nav.nav--scrolled{
   font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700;
   padding: 9px 24px; border-radius: 999px; margin-bottom: 36px;
 }
+/* La marca se escribe siempre en minúscula: esta variante anula el uppercase
+   que llevan el resto de píldoras, que son etiquetas de sección. */
+.hero-pill--brand{
+  font-family:'Fredoka', sans-serif; font-weight: 600;
+  text-transform: none; letter-spacing: 0; font-size: 15px;
+  padding: 7px 22px;
+}
 .hero-pill::before{
   content:''; width: 7px; height: 7px; border-radius: 50%; background: var(--lime);
   box-shadow: 0 0 12px rgba(var(--lime-rgb),0.9); flex-shrink: 0;
@@ -141,6 +148,8 @@ nav.nav--scrolled{
 }
 
 .hero-copy{ color: var(--muted); font-size: 19px; line-height: 1.5; max-width: 480px; margin-bottom: 34px; }
+/* la promesa con plazo: es lo que debe leerse aunque solo se pase la vista */
+.hero-copy strong{ color: var(--lime); font-weight: 600; }
 
 .video-mock{
   position: relative; aspect-ratio: 16 / 9; border-radius: 20px;
@@ -199,40 +208,71 @@ nav.nav--scrolled{
   .hero-grid{ grid-template-columns: 1fr; }
 }
 
-/* --- barra de confianza --- */
-.trust-bar{ padding: 44px 0 56px; }
-.trust-label{
-  text-align:center; color: var(--muted-dark); font-size:11px;
-  letter-spacing:0.22em; text-transform:uppercase; margin-bottom: 30px;
+/* --- creencias que frenan la decision (Parte 2 del metodo) ---
+   Cada bloque enfrenta la frase que la persona ya se dijo con su respuesta. */
+.beliefs-section{ text-align:center; }
+.beliefs-list{
+  max-width: 900px; margin: 0 auto; text-align:left;
+  display:grid; gap: 20px;
+}
+.belief{
+  border-left: 2px solid rgba(var(--lime-rgb),0.45);
+  padding: 6px 0 6px 24px;
+}
+.belief-myth{
+  font-family:'Fraunces', serif; font-style: italic;
+  color: var(--muted); font-size: 20px; line-height:1.4; margin-bottom: 10px;
+}
+.belief-truth{ color: var(--text); font-size: 16px; line-height: 1.6; }
+
+/* --- que incluye el sistema: la oferta, antes de pedir la reunion --- */
+.includes-section{ text-align:center; }
+.includes-list{
+  list-style: none; max-width: 780px; margin: 54px auto 0; text-align:left;
+  display:grid; grid-template-columns: 1fr 1fr; gap: 14px 28px;
+}
+.includes-list li{
+  position: relative; padding-left: 34px;
+  color: var(--text); font-size: 16px; line-height: 1.5;
+}
+.includes-list li::before{
+  content:'✓'; position:absolute; left:0; top:2px;
+  width: 22px; height: 22px; border-radius: 50%;
+  display:flex; align-items:center; justify-content:center;
+  background: rgba(var(--lime-rgb),0.16); color: var(--lime);
+  font-size: 12px; font-weight: 700;
+}
+@media (max-width: 760px){
+  .includes-list{ grid-template-columns: 1fr; }
 }
 
-.trust-marquee{
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+/* --- como se ve el negocio despues: el contrapeso al dolor --- */
+.results-section{ text-align:center; }
+.results-grid{
+  display:grid; grid-template-columns: repeat(3, 1fr); gap: 22px;
+  text-align:left; margin-top: 56px;
 }
-.trust-track{
-  display:flex; align-items:center; width: max-content;
-  animation: trust-scroll 55s linear infinite;
+.result-card{
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 16px; padding: 26px 24px;
+  transition: border-color .5s var(--ease-out-expo);
 }
-.trust-track-half{ display:flex; align-items:center; flex-shrink:0; }
-.trust-marquee:hover .trust-track{ animation-play-state: paused; }
+.result-card:hover{ border-color: rgba(var(--lime-rgb),0.35); }
+.result-card h3{
+  font-family:'Fredoka', sans-serif; font-weight: 700; color: var(--lime);
+  font-size: 18px; line-height:1.25; margin-bottom: 10px;
+}
+.result-card p{ color: var(--muted); font-size: 15px; line-height: 1.55; }
 
-@keyframes trust-scroll{
-  from{ transform: translateX(0); }
-  to{ transform: translateX(-50%); }
+@media (max-width: 900px){
+  .results-grid{ grid-template-columns: 1fr; }
 }
 
-.trust-logo{
-  display:flex; align-items:center; gap:12px;
-  font-size: 25px; font-weight: 700; white-space: nowrap;
-  margin-right: 84px;
-  /* en blanco y negro no compiten con el lima; recuperan color al pasar el raton */
-  color: var(--muted); filter: grayscale(1); opacity: .55;
-  transition: filter .5s var(--ease-out-expo), opacity .5s var(--ease-out-expo);
-}
-.trust-logo:hover{ filter: grayscale(0); opacity: 1; }
-.trust-logo img{ height:30px; width:auto; display:block; flex-shrink:0; border-radius:5px; }
+/* --- historia de la agencia --- */
+.about-copy{ max-width: 680px; margin-top: 20px; }
+.about-copy p{ color: var(--muted); font-size: 17px; line-height: 1.7; margin-bottom: 16px; }
+/* el cierre es la frase que debe quedarse: se destaca */
+.about-copy p:last-child{ margin-bottom: 0; color: var(--text); }
 
 /* --- botón de momnt: halo que late + destello diagonal que lo barre --- */
 @keyframes pulseGlow{
@@ -407,76 +447,6 @@ nav.nav--scrolled{
 @media (max-width: 900px){
   .systems-grid{ grid-template-columns: 1fr; }
   .system-card{ min-height: 420px; }
-}
-
-/* --- proceso paso a paso --- */
-.steps-section{ text-align:center; }
-.steps-headline{
-  font-family:'Fredoka', sans-serif; font-weight: 700; font-style: normal;
-  font-size: clamp(30px, 4.2vw, 52px); line-height: 1.1;
-  margin: 22px auto 70px;
-  color: var(--text);
-}
-
-.steps-timeline{ position:relative; max-width: 1000px; margin: 0 auto; }
-.steps-timeline::before{
-  content:''; position:absolute; top:0; bottom:0; left:50%;
-  width:1px; background: var(--border);
-}
-
-.step{
-  display:grid; grid-template-columns: 1fr 90px 1fr;
-  align-items:center; text-align:left;
-  margin-bottom: 56px;
-}
-.step:last-child{ margin-bottom: 0; }
-
-.step-media{ grid-column: 1; }
-/* el numero se queda pegado mientras su paso cruza la pantalla (jaygood) */
-.step-num{
-  grid-column: 2; justify-self:center;
-  position: sticky; top: 50vh;
-  font-size: 22px; font-weight: 700; color: var(--lime);
-  background: var(--bg); padding: 8px 0; line-height: 1;
-}
-.step-num::before{ content:'/'; color: var(--muted-dark); }
-.step-body{ grid-column: 3; padding-left: 8px; }
-
-.step:nth-child(even) .step-media{ grid-column: 3; }
-.step:nth-child(even) .step-body{ grid-column: 1; padding-left: 0; padding-right: 8px; text-align:right; }
-
-.step-media img,
-.step-media-ph{
-  width: 100%; aspect-ratio: 4 / 3; border-radius: 14px; display:block;
-  object-fit: cover;
-}
-.step-media-ph{
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  display:flex; align-items:center; justify-content:center;
-  color: var(--muted-dark); font-size: 12px; letter-spacing: 0.14em;
-  text-transform: uppercase;
-  font-family:'Space Mono', ui-monospace, monospace;
-}
-
-.step-body h3{
-  font-family:'Fredoka', sans-serif; font-weight: 700; color: var(--text);
-  font-size: 21px; margin-bottom: 8px;
-}
-.step-body p{ color: var(--muted); font-size: 16px; line-height: 1.5; }
-
-@media (max-width: 820px){
-  .steps-timeline::before{ display:none; }
-  .step,
-  .step:nth-child(even){ grid-template-columns: 1fr; gap: 14px; margin-bottom: 44px; }
-  .step .step-media,
-  .step:nth-child(even) .step-media{ grid-column: 1; grid-row: 2; }
-  .step .step-body,
-  .step:nth-child(even) .step-body{
-    grid-column: 1; grid-row: 3; text-align:left; padding: 0;
-  }
-  .step .step-num,
-  .step:nth-child(even) .step-num{ grid-column: 1; grid-row: 1; justify-self:start; position:static; }
 }
 
 .btn{
@@ -777,7 +747,7 @@ footer{
   .js-anim [data-hero-in]{ opacity: 1; }
   .play-btn, .cta-button, .btn, .contact-submit,
   .cta-button::after, .btn::after, .contact-submit::after,
-  .contact-progress-fill, .trust-track{ animation: none; }
+  .contact-progress-fill{ animation: none; }
 }
 
 @media (max-width: 640px){

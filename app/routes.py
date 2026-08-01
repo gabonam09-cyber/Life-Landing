@@ -10,88 +10,155 @@ from .security import login_requerido
 
 bp = Blueprint("main", __name__)
 
-# Pasos del proceso (linea de tiempo del home). Copys provisionales: el cliente
-# los reemplazara. Las imagenes se cargan en static/img/paso-0N.jpg cuando esten.
-PASOS = [
+# Creencias que frenan la decision, tomadas de las objeciones reales del
+# documento de cliente ideal. Cada una es una frase que el dueño ya se dijo.
+CREENCIAS = [
     {
-        "n": "01",
-        "titulo": "Diagnóstico inicial",
-        "texto": "Revisamos tu negocio, tu oferta y cómo te encuentran hoy tus clientes.",
+        "creencia": "\"Mis pacientes quieren trato humano, no un robot.\"",
+        "respuesta": (
+            "Y lo van a seguir teniendo. La IA responde lo que se pregunta cien veces al día: "
+            "horarios, ubicación, precios, disponibilidad. En cuanto alguien pregunta por un "
+            "tratamiento concreto, la conversación pasa a tu equipo. Nadie recibe un diagnóstico "
+            "de un bot."
+        ),
     },
     {
-        "n": "02",
-        "titulo": "Auditoría comercial",
-        "texto": "Analizamos por dónde entran los mensajes, quién responde y en cuánto tiempo.",
+        "creencia": "\"Ya contraté una agencia y solo tiré el dinero.\"",
+        "respuesta": (
+            "Nos lo dicen en casi todas las llamadas. Por eso no vendemos alcance ni "
+            "seguidores: lo que medimos cada semana es cuántos escribieron, cuántos agendaron "
+            "y cuántos se presentaron. Si eso no sube, no hay nada que presumir."
+        ),
     },
     {
-        "n": "03",
-        "titulo": "Detectamos la fuga",
-        "texto": "Identificamos el punto exacto donde se están perdiendo los clientes.",
+        "creencia": "\"Yo no sé de tecnología, esto me va a complicar más.\"",
+        "respuesta": (
+            "Tú no configuras nada. Lo montamos nosotros sobre el WhatsApp que ya usas, y tu "
+            "recepción sigue trabajando igual. Lo único que cambia es que deja de contestar lo "
+            "mismo todo el día."
+        ),
     },
     {
-        "n": "04",
-        "titulo": "Diseñamos el sistema",
-        "texto": "Definimos qué necesitas: captación, respuesta con IA, reputación o una combinación.",
+        "creencia": "\"Si ya no me doy abasto, ¿para qué quiero más pacientes?\"",
+        "respuesta": (
+            "Porque el problema no suele ser el volumen, es el desorden: huecos a media mañana, "
+            "saturación el sábado y ausentes que tiran el espacio. El sistema ordena la agenda "
+            "antes de llenarla."
+        ),
     },
     {
-        "n": "05",
-        "titulo": "Seguimiento continuo",
-        "texto": "Cada semana revisamos respuestas, citas agendadas y qué mover a continuación.",
+        "creencia": "\"Automatizar va a abaratar la imagen de mi clínica.\"",
+        "respuesta": (
+            "Lo que abarata la imagen es tardar seis horas en contestar un mensaje. Responder "
+            "en segundos, con tu tono y tu información, se lee como una clínica que tiene su "
+            "operación en orden."
+        ),
     },
 ]
 
 
-# Preguntas frecuentes del home. Copys provisionales: escritos solo con lo que ya
-# afirmamos en el sitio (diagnostico gratuito, seleccion de clientes, los 3 sistemas).
+# Como se ve la clinica una vez funcionando el sistema. Escrito con los deseos
+# del documento: agenda llena, no-shows, pacientes calificados, tiempo libre.
+RESULTADOS = [
+    {
+        "titulo": "Abres con la agenda llena",
+        "texto": "Las citas que se agendaron de madrugada ya están ahí cuando llegas a la clínica.",
+    },
+    {
+        "titulo": "Bajan los pacientes que no llegan",
+        "texto": "Recordatorios automáticos antes de cada cita, para que el espacio no se tire.",
+    },
+    {
+        "titulo": "Llegan pacientes, no preguntones",
+        "texto": "Las campañas filtran a quien solo busca precio y dejan pasar a quien sí va a tratarse.",
+    },
+    {
+        "titulo": "Nadie espera respuesta",
+        "texto": "Cada mensaje se contesta al momento, a las 11 de la noche y en domingo.",
+    },
+    {
+        "titulo": "Vuelven los que ya cotizaron",
+        "texto": "El sistema reactiva solo a los pacientes que preguntaron hace meses y nunca volvieron.",
+    },
+    {
+        "titulo": "Ves los números desde el celular",
+        "texto": "Cuántos escribieron, cuántos agendaron, cuántos asistieron y cuánto se vendió.",
+    },
+]
+
+
+# Que incluye el sistema. Es la oferta ya definida en el documento de datos base:
+# el visitante debe saber que se le va a proponer antes de entrar al Zoom.
+INCLUYE = [
+    "Auditoría de tu embudo actual de pacientes",
+    "Campañas de anuncios que filtran curiosos, no pacientes reales",
+    "Bot de WhatsApp con IA que agenda citas 24/7",
+    "Recordatorios automáticos que reducen tus ausencias",
+    "Reactivación de pacientes que cotizaron y nunca volvieron",
+    "Seguimiento post-tratamiento para que regresen",
+    "Panel de control: tus citas y ventas desde el celular",
+]
+
+
+# Preguntas frecuentes: cada una rompe una objecion concreta que frena la decision,
+# no explica el servicio. Las informativas ya se responden en el resto del sitio.
 FAQS = [
     {
         "n": "01",
-        "pregunta": "¿life es una agencia de marketing o algo más?",
+        "pregunta": "¿Qué pasa exactamente en esa reunión?",
         "respuesta": (
-            "Combinamos marketing digital con inteligencia artificial aplicada. No vendemos "
-            "campañas sueltas: construimos sistemas de captación, respuesta y reputación que "
-            "trabajan juntos."
+            "Son unos 30 minutos por Zoom o Meet. Revisamos contigo cómo llegan hoy tus "
+            "pacientes, por dónde se están cayendo y qué sistema haría falta. Sales de ahí con "
+            "la propuesta explicada. No se firma nada en esa llamada ni te vamos a presionar "
+            "para decidir en caliente: lo revisas con calma y, si tiene sentido, hablamos otra vez."
         ),
     },
     {
         "n": "02",
-        "pregunta": "¿Qué revisan en el diagnóstico?",
+        "pregunta": "¿Tiene costo la reunión?",
         "respuesta": (
-            "Cómo te encuentran hoy tus clientes, por dónde entran los mensajes, cuánto tardas "
-            "en responder y qué dicen tus reseñas. Con eso ubicamos dónde se están perdiendo "
-            "los clientes."
+            "No. La reunión y la revisión previa de tu clínica no cuestan nada y no te "
+            "comprometen a nada. Si al revisarla no vemos una oportunidad clara, te lo decimos "
+            "y ahí queda: preferimos eso a venderte algo que no te va a mover los números."
         ),
     },
     {
         "n": "03",
-        "pregunta": "¿Qué pasa después de solicitar el diagnóstico?",
+        "pregunta": "Ya trabajé con una agencia y no funcionó. ¿Por qué ustedes sí?",
         "respuesta": (
-            "Te contactamos en menos de 24 horas para agendar una llamada. Ahí revisamos tu "
-            "negocio y, si vemos una oportunidad real de mejora, te proponemos cómo avanzar."
+            "Es lo que más escuchamos. La diferencia es qué medimos: no te vamos a enseñar "
+            "alcance ni seguidores, sino cuántos pacientes escribieron, cuántos agendaron y "
+            "cuántos se presentaron. Esos tres números se revisan cada semana contigo, así que "
+            "si algo no está sirviendo se ve en semanas, no en seis meses."
         ),
     },
     {
         "n": "04",
-        "pregunta": "¿Trabajan con cualquier negocio?",
+        "pregunta": "Mis pacientes son mayores y no usan tanto WhatsApp. ¿Igual sirve?",
         "respuesta": (
-            "No. Primero evaluamos si existe una oportunidad real de ayudar. Si no la vemos, "
-            "te lo decimos y no avanzamos."
+            "En ese caso el peso no está en el bot, sino en que aparezcas en Google cuando "
+            "buscan tu especialidad en la zona, en cuidar tus reseñas y en los recordatorios "
+            "de cita. Eso lo vemos en la reunión: si tu paciente no está en WhatsApp, no tiene "
+            "sentido cobrarte por un bot de WhatsApp."
         ),
     },
     {
         "n": "05",
-        "pregunta": "¿El diagnóstico tiene costo?",
+        "pregunta": "¿Cuánto cuesta y me amarran a un contrato?",
         "respuesta": (
-            "No. El diagnóstico inicial es gratuito y sin compromiso. Solo hablamos de trabajar "
-            "juntos si encontramos algo concreto que mejorar."
+            "El precio depende de qué necesite tu clínica: no cuesta lo mismo ordenar solo la "
+            "respuesta por WhatsApp que montar captación, respuesta y reputación juntas. El "
+            "número sale en la reunión y te lo mandamos por escrito. No trabajamos con "
+            "permanencias forzadas: la idea es que sigas porque los números te lo justifican."
         ),
     },
     {
         "n": "06",
-        "pregunta": "¿Pueden trabajar con mi equipo actual?",
+        "pregunta": "Tengo que consultarlo con mi socio o el director médico.",
         "respuesta": (
-            "Sí. Los sistemas se integran con quien ya atiende a tus clientes: la IA responde y "
-            "agenda, y tu equipo entra en la conversación cuando ya hay una cita en firme."
+            "Perfecto, tráelo a la reunión. Y si no puede, te mandamos la propuesta por escrito "
+            "para que se la enseñes: precio, alcance y plazos, sin letra chica. Es justo por eso "
+            "que en la primera llamada no se cierra nada."
         ),
     },
 ]
@@ -109,20 +176,14 @@ def index():
         if os.path.exists(ruta):
             system_videos[numero] = url_for("static", filename=f"video/system-{numero}.mp4")
 
-    # Imagen opcional por paso: aparece sola cuando exista el archivo.
-    pasos = []
-    for paso in PASOS:
-        item = dict(paso)
-        ruta_img = os.path.join(current_app.static_folder, "img", f"paso-{paso['n']}.jpg")
-        item["imagen"] = (
-            url_for("static", filename=f"img/paso-{paso['n']}.jpg")
-            if os.path.exists(ruta_img)
-            else None
-        )
-        pasos.append(item)
-
     return render_template(
-        "index.html", form=form, system_videos=system_videos, pasos=pasos, faqs=FAQS
+        "index.html",
+        form=form,
+        system_videos=system_videos,
+        faqs=FAQS,
+        creencias=CREENCIAS,
+        resultados=RESULTADOS,
+        incluye=INCLUYE,
     )
 
 
@@ -143,6 +204,7 @@ def contacto():
 
     lead = Lead(
         nombre=form.nombre.data.strip(),
+        clinica=form.clinica.data.strip(),
         email=form.email.data.strip().lower(),
         telefono=(form.telefono.data or "").strip() or None,
         mensaje=form.mensaje.data.strip(),

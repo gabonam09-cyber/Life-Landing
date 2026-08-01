@@ -10,6 +10,7 @@ class Lead(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(120), nullable=False)
+    clinica = db.Column(db.String(140), nullable=True)
     email = db.Column(db.String(120), nullable=False)
     telefono = db.Column(db.String(30), nullable=True)
     mensaje = db.Column(db.Text, nullable=False)
