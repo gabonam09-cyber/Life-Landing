@@ -35,15 +35,13 @@ services:
       - key: ADMIN_PASSWORD_HASH
         sync: false
 
-      # Aviso por correo al entrar un lead. La contraseña de aplicación de
-      # Gmail se escribe a mano en el panel: nunca viaja en el repositorio.
-      - key: SMTP_HOST
-        value: smtp.gmail.com
-      - key: SMTP_PORT
-        value: "587"
-      - key: SMTP_USER
-        value: agenciainam00@gmail.com
-      - key: SMTP_PASSWORD
+      # Aviso por correo al entrar un lead.
+      #
+      # IMPORTANTE: el plan gratuito de Render bloquea los puertos SMTP (25,
+      # 465 y 587), así que un envío por Gmail se queda colgado. Por eso se usa
+      # la API HTTP de Resend, que va por el 443 como cualquier petición web.
+      # La clave se escribe a mano en el panel: nunca viaja en el repositorio.
+      - key: RESEND_API_KEY
         sync: false
       - key: NOTIFICAR_A
         value: agenciainam00@gmail.com

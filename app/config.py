@@ -33,6 +33,13 @@ class Config:
 
     # Aviso por correo al entrar un lead. Si faltan credenciales, el sitio
     # funciona igual: simplemente no manda el aviso.
+    #
+    # Via preferida: API HTTP (puerto 443). Es la unica que funciona en el plan
+    # gratuito de Render, que bloquea los puertos SMTP.
+    RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
+    REMITENTE_API = os.environ.get("REMITENTE_API", "life <onboarding@resend.dev>")
+
+    # Via alternativa: SMTP. Solo en local o con un plan de pago en Render.
     SMTP_HOST = os.environ.get("SMTP_HOST", "smtp.gmail.com")
     SMTP_PORT = int(os.environ.get("SMTP_PORT", 587))
     SMTP_USER = os.environ.get("SMTP_USER")
