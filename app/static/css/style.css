@@ -14,11 +14,6 @@
   /* jaygood usa #6B7280 aqui, pero da 4.27:1 y aqui carga microcopys de 11-13px:
      se aclara hasta 5.3:1 para que se lean. */
   --muted-dark: #7A8290;
-  /* Primera linea del titular, "hundida" en el fondo. jaygood la lleva casi
-     invisible porque ahi es decorativa; aqui forma parte de la frase, asi que
-     se queda en 4:1 (el titular es texto grande, pide 3:1). */
-  --ghost: #6E6E6E;
-
   --border: rgba(255,255,255,0.1);
   --overlay-1: rgba(255,255,255,0.03);
   --overlay-2: rgba(255,255,255,0.05);
@@ -140,7 +135,9 @@ nav.nav--scrolled{
   letter-spacing: -0.04em; margin-bottom: 32px;
   color: var(--text);
 }
-.hl-ghost{ display:block; color: var(--ghost); }
+/* Primera linea del titular. Ya no va atenuada: se lee en blanco como el resto
+   de la frase, y la clase solo sirve para forzar el salto de linea. */
+.hl-ghost{ display:block; color: var(--text); }
 .hero-headline em{
   font-family: 'Fraunces', serif; font-style: italic; font-weight: 400;
   color: var(--red-hot);
