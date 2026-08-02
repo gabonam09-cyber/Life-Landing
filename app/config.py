@@ -31,6 +31,15 @@ class Config:
 
     RATELIMIT_STORAGE_URI = os.environ.get("RATELIMIT_STORAGE_URI", "memory://")
 
+    # Aviso por correo al entrar un lead. Si faltan credenciales, el sitio
+    # funciona igual: simplemente no manda el aviso.
+    SMTP_HOST = os.environ.get("SMTP_HOST", "smtp.gmail.com")
+    SMTP_PORT = int(os.environ.get("SMTP_PORT", 587))
+    SMTP_USER = os.environ.get("SMTP_USER")
+    SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD")
+    NOTIFICAR_A = os.environ.get("NOTIFICAR_A") or os.environ.get("SMTP_USER")
+    URL_PANEL = os.environ.get("URL_PANEL", "/panel")
+
     # Cookies de sesion: solo viajan por HTTPS en produccion, nunca accesibles por JS
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = "Lax"

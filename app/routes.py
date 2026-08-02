@@ -6,6 +6,7 @@ from werkzeug.security import check_password_hash
 from .extensions import limiter
 from .forms import ContactForm, LoginForm
 from .models import Lead, db
+from .notificaciones import avisar_lead_nuevo
 from .security import login_requerido
 
 bp = Blueprint("main", __name__)
@@ -212,6 +213,20 @@ def contacto():
     )
     db.session.add(lead)
     db.session.commit()
+
+    # El aviso va DESPUES del commit y en segundo plano: si el correo falla,
+    # el lead ya está a salvo en la base de datos.
+    avisar_lead_nuevo(
+        current_app._get_current_object(),
+        {
+            "nombre": lead.nombre,
+            "clinica": lead.clinica,
+            "email": lead.email,
+            "telefono": lead.telefono,
+            "mensaje": lead.mensaje,
+            "creado_en": lead.creado_en.strftime("%d/%m/%Y %H:%M UTC"),
+        },
+    )
 
     flash("¡Gracias! Te contactaremos pronto.", "success")
     return redirect(url_for("main.index"))
