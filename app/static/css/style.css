@@ -480,6 +480,10 @@ nav.nav--scrolled{
 .btn-outline:hover{ border-color: var(--lime); color: var(--lime); }
 .hero-actions{ display:flex; flex-wrap:wrap; gap: 12px; }
 
+/* Los CTA del hero van mas compactos que el .btn general: compiten con un
+   titular enorme y a tamano completo se comian el bloque. */
+.hero-actions .btn{ padding: 11px 22px; font-size: 13.5px; border-radius: 7px; }
+
 section{ padding: 80px 0; border-top: 1px solid var(--border); }
 .s-eyebrow{ color:var(--muted-dark); font-size:11px; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:14px; }
 h2{ font-family:'Fraunces', serif; font-style: italic; font-weight:400; font-size: 34px; color: var(--text); }
