@@ -580,12 +580,19 @@ h2{ font-family:'Fraunces', serif; font-style: italic; font-weight:400; font-siz
 .modal-card{ position: relative; z-index: 1; max-height: calc(100vh - 48px); overflow-y: auto; }
 .modal-close{
   position:absolute; top: 14px; right: 14px;
-  width: 34px; height: 34px; border-radius: 50%;
+  width: 44px; height: 44px; border-radius: 50%;
   background: var(--overlay-2); border: 1px solid var(--border);
-  color: var(--text); font-size: 20px; line-height: 1; cursor:pointer;
+  color: var(--text); font-size: 26px; line-height: 1; cursor:pointer;
   display:flex; align-items:center; justify-content:center;
   transition: background .3s var(--ease-out-expo);
 }
+
+/* Margen de tolerancia invisible: el clic cuenta aunque caiga un poco fuera del
+   circulo, que es lo que pasaba antes al apuntar a la esquina de la ventana. */
+.modal-close::before{
+  content:''; position:absolute; inset: -8px; border-radius: 50%;
+}
+
 .modal-close:hover{ background: rgba(255,255,255,0.14); }
 
 /* --- formulario de conversion --- */
