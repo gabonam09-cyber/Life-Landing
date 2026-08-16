@@ -136,9 +136,11 @@ def contacto():
     lead = Lead(
         nombre=form.nombre.data.strip(),
         clinica=(form.clinica.data or "").strip() or None,
-        email=form.email.data.strip().lower(),
+        # La columna es NOT NULL en la base ya creada, asi que un campo vacio se
+        # guarda como cadena vacia: evita migrar la tabla en produccion.
+        email=(form.email.data or "").strip().lower(),
         telefono=(form.telefono.data or "").strip() or None,
-        mensaje=form.mensaje.data.strip(),
+        mensaje=(form.mensaje.data or "").strip(),
         ip=request.remote_addr,
     )
     db.session.add(lead)

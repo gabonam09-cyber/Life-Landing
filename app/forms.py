@@ -10,9 +10,11 @@ class ContactForm(FlaskForm):
     # El campo ya no se muestra en el formulario, pero se conserva por si algun
     # lead viejo del panel lo trae guardado.
     clinica = StringField("Negocio", validators=[Optional(), Length(max=140)])
-    email = StringField("Correo", validators=[DataRequired(), Email(), Length(max=120)])
+    # Correo y mensaje son opcionales: el formulario no debe frenar a nadie por
+    # un campo de mas. Si escriben correo, igual tiene que ser uno valido.
+    email = StringField("Correo", validators=[Optional(), Email(), Length(max=120)])
     telefono = StringField("Teléfono", validators=[Optional(), Length(min=8, max=30)])
-    mensaje = TextAreaField("¿Qué necesita tu negocio?", validators=[DataRequired(), Length(min=10, max=2000)])
+    mensaje = TextAreaField("¿Qué necesita tu negocio?", validators=[Optional(), Length(max=2000)])
 
     # Honeypot: invisible para humanos (oculto por CSS), los bots de spam
     # suelen rellenar todos los campos que encuentran. Si esto llega con
