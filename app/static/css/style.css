@@ -750,12 +750,82 @@ footer{
 .js-anim [data-reveal],
 .js-anim [data-hero-in]{ opacity: 0; }
 
+/* --- Carrusel infinito de logos ("Formados en") ---
+   Los dos grupos de logos son identicos y se desplazan a la par. Cuando cada uno
+   recorrio el ancho completo de un grupo, el segundo cae justo donde arrancaba el
+   primero: el ciclo se reinicia sin que se vea la costura. */
+.marquee-section{ border-top: none; padding-top: 0; text-align: center; }
+
+.marquee{
+  display: flex;
+  overflow: hidden;
+  margin-top: 34px;
+  /* Rompe el ancho de .wrap para que la banda cruce la pantalla completa. */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  /* Los logos se difuminan al entrar y salir, en vez de cortarse en seco. */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+
+.marquee-group{
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 64px;
+  padding-right: 64px;
+  animation: marquee-scroll 38s linear infinite;
+}
+
+/* Simbolo + nombre: la U de Udemy o el escudo de la UNAM no se reconocen solos
+   a este tamano, el nombre al lado es lo que hace legible la credencial. */
+.marquee-item{
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 14px;
+  opacity: 0.55;
+  transition: opacity 0.25s ease;
+}
+
+.marquee-logo{ flex: 0 0 auto; height: 34px; width: auto; }
+
+/* El escudo de la UNAM lleva mucho mas detalle en el mismo espacio. */
+.marquee-logo--unam{ height: 42px; }
+
+.marquee-name{
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+@keyframes marquee-scroll{
+  from{ transform: translateX(0); }
+  to{ transform: translateX(-100%); }
+}
+
+@media (hover: hover) and (pointer: fine){
+  .marquee:hover .marquee-group{ animation-play-state: paused; }
+  .marquee-item:hover{ opacity: 1; }
+}
+
+@media (max-width: 640px){
+  .marquee-group{ gap: 40px; padding-right: 40px; }
+  .marquee-item{ gap: 10px; }
+  .marquee-logo{ height: 26px; }
+  .marquee-logo--unam{ height: 32px; }
+  .marquee-name{ font-size: 13px; }
+}
+
 @media (prefers-reduced-motion: reduce){
   .js-anim [data-reveal],
   .js-anim [data-hero-in]{ opacity: 1; }
   .play-btn, .cta-button, .btn, .contact-submit,
   .cta-button::after, .btn::after, .contact-submit::after,
   .contact-progress-fill{ animation: none; }
+  .marquee-group{ animation: none; }
 }
 
 @media (max-width: 640px){

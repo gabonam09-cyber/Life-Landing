@@ -46,12 +46,32 @@
   </div>
 </section>
 
-<section id="formacion" data-reveal style="text-align:center; padding-top:0;">
+<section id="formacion" class="marquee-section" data-reveal>
   <span class="hero-pill">Formados en</span>
-  <div class="system-tags" style="justify-content:center; margin-top:18px;">
-    <span class="tag">Udemy</span>
-    <span class="tag">Funnel School</span>
-    <span class="tag">UNAM</span>
+
+  {% set escuelas = [
+    ('logo-udemy-w.png',        'Udemy',         ''),
+    ('logo-funnelschool-w.png', 'Funnel School', ''),
+    ('logo-unam-w.png',         'UNAM',          'marquee-logo--unam'),
+  ] %}
+
+  <div class="marquee">
+    {# Dos grupos identicos: cuando cada uno se desplazo el ancho de un grupo, el
+       segundo queda donde arrancaba el primero y el ciclo no muestra costura. #}
+    {% for grupo in range(2) %}
+    <div class="marquee-group" {% if grupo %}aria-hidden="true"{% endif %}>
+      {# La terna se repite para que un grupo sea siempre mas ancho que la
+         pantalla; si no, quedaria un hueco al cerrar el ciclo. #}
+      {% for repeticion in range(6) %}
+        {% for archivo, nombre, extra in escuelas %}
+        <div class="marquee-item">
+          <img class="marquee-logo {{ extra }}" src="{{ url_for('static', filename='img/' ~ archivo) }}" alt="">
+          <span class="marquee-name">{{ nombre }}</span>
+        </div>
+        {% endfor %}
+      {% endfor %}
+    </div>
+    {% endfor %}
   </div>
 </section>
 
