@@ -43,6 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Si el formulario volvio con errores de validacion, reabre el modal
     // para que la persona pueda corregir sin buscar el boton otra vez.
     if (document.querySelector('.flash-error')) abrirModal();
+    // Al entrar a la pagina, el formulario aparece de inmediato.
+    else abrirModal();
   }
 
   // --- Acordeon del FAQ: al abrir una pregunta se cierra la anterior ---
@@ -138,6 +140,30 @@ document.addEventListener('DOMContentLoaded', () => {
     // Sin Lenis, se bloquea el scroll del documento a mano.
     bloquearScroll = () => { document.body.style.overflow = 'hidden'; };
     liberarScroll = () => { document.body.style.overflow = ''; };
+  }
+
+  // --- CTAs del hero: bajan al recuadro y arrancan el video ---
+  const heroVideo = document.querySelector('.hero-video');
+  const videoTarget = document.getElementById('video');
+
+  if (heroVideo && videoTarget) {
+    const reproducirHeroVideo = () => {
+      heroVideo.play().catch(() => {});
+    };
+
+    document.querySelectorAll('a[href="#video"]').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        if (lenis) {
+          lenis.scrollTo(videoTarget, { offset: -90, immediate: reduceMotion });
+        } else {
+          videoTarget.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+        }
+
+        reproducirHeroVideo();
+      });
+    });
   }
 
   // --- Animaciones (opcionales) ---

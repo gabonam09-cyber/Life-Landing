@@ -15,15 +15,6 @@ bp = Blueprint("main", __name__)
 # documento de cliente ideal. Cada una es una frase que el dueño ya se dijo.
 CREENCIAS = [
     {
-        "creencia": "\"Mis pacientes quieren trato humano, no un robot.\"",
-        "respuesta": (
-            "Y lo van a seguir teniendo. La IA responde lo que se pregunta cien veces al día: "
-            "horarios, ubicación, precios, disponibilidad. En cuanto alguien pregunta por un "
-            "tratamiento concreto, la conversación pasa a tu equipo. Nadie recibe un diagnóstico "
-            "de un bot."
-        ),
-    },
-    {
         "creencia": "\"Ya contraté una agencia y solo tiré el dinero.\"",
         "respuesta": (
             "Nos lo dicen en casi todas las llamadas. Por eso no vendemos alcance ni "
@@ -47,14 +38,6 @@ CREENCIAS = [
             "antes de llenarla."
         ),
     },
-    {
-        "creencia": "\"Automatizar va a abaratar la imagen de mi clínica.\"",
-        "respuesta": (
-            "Lo que abarata la imagen es tardar seis horas en contestar un mensaje. Responder "
-            "en segundos, con tu tono y tu información, se lee como una clínica que tiene su "
-            "operación en orden."
-        ),
-    },
 ]
 
 
@@ -63,27 +46,23 @@ CREENCIAS = [
 RESULTADOS = [
     {
         "titulo": "Abres con la agenda llena",
-        "texto": "Las citas que se agendaron de madrugada ya están ahí cuando llegas a la clínica.",
+        "texto": "Las citas que se agendaron el dia anterior ya están ahí cuando llegas a la clínica.",
     },
     {
-        "titulo": "Bajan los pacientes que no llegan",
-        "texto": "Recordatorios automáticos antes de cada cita, para que el espacio no se tire.",
+        "titulo": "Te encuentras con clientes que no vuelven hace años",
+        "texto": "No pierdes clientes por el tiempo los pierdes por dejarlos de contactar.",
     },
     {
-        "titulo": "Llegan pacientes, no preguntones",
-        "texto": "Las campañas filtran a quien solo busca precio y dejan pasar a quien sí va a tratarse.",
+        "titulo": "Llegan clientes informados y desididos a dar el siguiente paso",
+        "texto": "Las campañas filtran a quien a tus clientes ideales y dejan pasar a quien sí va requerir tu servicio.",
     },
     {
         "titulo": "Nadie espera respuesta",
         "texto": "Cada mensaje se contesta al momento, a las 11 de la noche y en domingo.",
     },
     {
-        "titulo": "Vuelven los que ya cotizaron",
-        "texto": "El sistema reactiva solo a los pacientes que preguntaron hace meses y nunca volvieron.",
-    },
-    {
         "titulo": "Ves los números desde el celular",
-        "texto": "Cuántos escribieron, cuántos agendaron, cuántos asistieron y cuánto se vendió.",
+        "texto": "Cuántos escribieron, los nombres de cuántos agendaron, cuando es la cita, cuántos asistieron y cuánto se vendió.",
     },
 ]
 
