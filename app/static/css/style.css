@@ -579,7 +579,9 @@ h2{ font-family:'Fraunces', serif; font-style: italic; font-weight:400; font-siz
 }
 .modal-card{ position: relative; z-index: 1; max-height: calc(100vh - 48px); overflow-y: auto; }
 .modal-close{
-  position:absolute; top: 14px; right: 14px;
+  /* Separado 22px del borde: la tarjeta recorta lo que se salga (overflow-y),
+     asi que el halo de abajo solo cabe entero si el boton no toca la esquina. */
+  position:absolute; top: 22px; right: 22px;
   width: 44px; height: 44px; border-radius: 50%;
   background: var(--overlay-2); border: 1px solid var(--border);
   color: var(--text); font-size: 26px; line-height: 1; cursor:pointer;
@@ -587,10 +589,12 @@ h2{ font-family:'Fraunces', serif; font-style: italic; font-weight:400; font-siz
   transition: background .3s var(--ease-out-expo);
 }
 
-/* Margen de tolerancia invisible: el clic cuenta aunque caiga un poco fuera del
-   circulo, que es lo que pasaba antes al apuntar a la esquina de la ventana. */
+/* Margen de tolerancia invisible: el circulo se ve de 44px pero responde en una
+   zona de 84px, asi el clic cuenta aunque se apunte claramente fuera. Va por
+   encima del resto de la tarjeta para que nada le robe el clic. */
+.modal-close{ z-index: 3; }
 .modal-close::before{
-  content:''; position:absolute; inset: -8px; border-radius: 50%;
+  content:''; position:absolute; inset: -20px; border-radius: 50%;
 }
 
 .modal-close:hover{ background: rgba(255,255,255,0.14); }
