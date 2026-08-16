@@ -147,21 +147,30 @@ document.addEventListener('DOMContentLoaded', () => {
   const videoTarget = document.getElementById('video');
 
   if (heroVideo && videoTarget) {
+    // Safari solo autoriza play() dentro del gesto que lo disparo, asi que va
+    // antes del scroll: cualquier cosa que se haga primero puede invalidarlo.
+    // Si aun asi lo rechaza, se reintenta sin sonido, que siempre esta permitido;
+    // el visitante ve el video corriendo y sube el volumen si quiere.
     const reproducirHeroVideo = () => {
-      heroVideo.play().catch(() => {});
+      const intento = heroVideo.play();
+      if (!intento) return;
+
+      intento.catch(() => {
+        heroVideo.muted = true;
+        heroVideo.play().catch(() => {});
+      });
     };
 
     document.querySelectorAll('a[href="#video"]').forEach((link) => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
+        reproducirHeroVideo();
 
         if (lenis) {
           lenis.scrollTo(videoTarget, { offset: -90, immediate: reduceMotion });
         } else {
           videoTarget.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
         }
-
-        reproducirHeroVideo();
       });
     });
   }
