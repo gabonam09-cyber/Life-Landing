@@ -10,7 +10,7 @@ from .config import usuarios_panel
 from .exportar import construir_excel, nombre_archivo
 
 from .analitica import (clics_para_mapa, purgar_analitica_vieja, registrar_eventos,
-                        resumen_metricas)
+                        reiniciar_metricas, resumen_metricas)
 from .extensions import csrf, limiter
 from .forms import ContactForm, LoginForm
 from .models import Lead, db
@@ -255,6 +255,24 @@ def panel_descargar():
         as_attachment=True,
         download_name=nombre_archivo(),
     )
+
+
+@bp.route("/panel/metricas/reiniciar", methods=["POST"])
+@login_requerido
+def panel_reiniciar_metricas():
+    """Deja el contador de visitas en cero. Los prospectos no se tocan."""
+    solo_internas = request.form.get("alcance") == "internas"
+
+    borrado = reiniciar_metricas(solo_internas=solo_internas)
+
+    if not borrado["sesiones"]:
+        flash("No había visitas que borrar.", "success")
+    else:
+        que = "tus visitas de prueba" if solo_internas else "las visitas"
+        flash(f"Se borraron {que}: {borrado['sesiones']} visitas "
+              f"y {borrado['clics']} clics. Los prospectos siguen intactos.", "success")
+
+    return redirect(url_for("main.panel_metricas"))
 
 
 @bp.route("/salud")

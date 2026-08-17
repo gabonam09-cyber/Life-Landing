@@ -149,6 +149,32 @@
   <script type="application/json" id="datos-clics">{{ clics|tojson }}</script>
 
   {% endif %}
+
+  {# --- Reinicio de metricas --- #}
+  {# Va al final y no arriba: es irreversible, asi que cuanto mas lejos del
+     resto de botones, menos probable es pulsarlo sin querer. #}
+  <div class="met-zona-peligro">
+    <h3 class="met-titulo">Empezar de cero</h3>
+    <p class="met-ayuda">
+      Borra las visitas registradas para que el conteo arranque limpio.
+      <strong>No se puede deshacer</strong> y <strong>no toca a tus prospectos</strong>.
+      Si quieres conservar lo medido, descarga el Excel antes.
+    </p>
+
+    <form method="POST" action="{{ url_for('main.panel_reiniciar_metricas') }}"
+          class="met-form-reinicio" data-confirmar>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <button type="submit" name="alcance" value="internas" class="met-boton-peligro">
+        Borrar solo mis visitas de prueba
+      </button>
+
+      <button type="submit" name="alcance" value="todo"
+              class="met-boton-peligro met-boton-peligro--fuerte">
+        Borrar todas las visitas
+      </button>
+    </form>
+  </div>
 </section>
 
 {% endblock %}

@@ -384,6 +384,29 @@ def clics_para_mapa(dias=30, dispositivo="escritorio", incluir_internas=False, l
     ]
 
 
+def reiniciar_metricas(solo_internas=False):
+    """Borra las visitas registradas. Nunca toca los prospectos del formulario.
+
+    Con solo_internas se limpian unicamente las visitas propias (las hechas con
+    sesion de admin abierta), que son las que ensucian al estar probando.
+    """
+    consulta = Sesion.query
+    if solo_internas:
+        consulta = consulta.filter(Sesion.es_interna.is_(True))
+
+    sesiones = consulta.all()
+    if not sesiones:
+        return {"sesiones": 0, "clics": 0}
+
+    clics = sum(len(s.clics) for s in sesiones)
+
+    for sesion in sesiones:
+        db.session.delete(sesion)  # el cascade se lleva secciones, video y clics
+
+    db.session.commit()
+    return {"sesiones": len(sesiones), "clics": clics}
+
+
 def purgar_analitica_vieja(dias=90):
     """Borra sesiones antiguas. Los clics son lo que mas crece con el tiempo."""
     limite = datetime.now(timezone.utc) - timedelta(days=dias)

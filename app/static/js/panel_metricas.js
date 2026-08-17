@@ -7,6 +7,27 @@
 (() => {
   'use strict';
 
+  // --- Confirmacion antes de borrar ---
+  // Va primero y aparte del mapa: el borrado es irreversible, asi que tiene que
+  // pedir confirmacion aunque no haya ni un clic que dibujar.
+  const formReinicio = document.querySelector('[data-confirmar]');
+  if (formReinicio) {
+    formReinicio.addEventListener('submit', (e) => {
+      const boton = e.submitter;
+      const todo = boton && boton.value === 'todo';
+
+      const aviso = todo
+        ? '¿Borrar TODAS las visitas registradas?\n\n'
+          + 'Se pierden las métricas de los visitantes reales.\n'
+          + 'Esto no se puede deshacer. Tus prospectos no se tocan.'
+        : '¿Borrar solo tus visitas de prueba?\n\n'
+          + 'Las de los visitantes reales se conservan.';
+
+      if (!window.confirm(aviso)) e.preventDefault();
+    });
+  }
+
+  // --- Mapa de clics ---
   const mapa = document.getElementById('mapa');
   const datos = document.getElementById('datos-clics');
   if (!mapa || !datos) return;
