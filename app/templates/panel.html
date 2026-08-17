@@ -1,18 +1,23 @@
 {% extends "base.html" %}
 {% block title %}Panel de prospectos — life{% endblock %}
+{% block nav_links %}{% endblock %}
 {% block content %}
 
 <section style="border-top:none; padding-top: 50px;">
-  <div class="s-eyebrow">Panel privado</div>
+  <div class="s-eyebrow">Panel privado · {{ session.get('admin_usuario', '') }}</div>
   <h2>Mensajes recibidos ({{ leads|length }})</h2>
-  <p class="s-sub"><a href="{{ url_for('main.panel_logout') }}" style="color:var(--lime);">Cerrar sesión</a></p>
+  <p class="s-sub">
+    <a href="{{ url_for('main.panel_metricas') }}" style="color:var(--lime);">Ver métricas de la landing</a> ·
+    <a href="{{ url_for('main.panel_descargar') }}" style="color:var(--lime);">Descargar todo en Excel</a> ·
+    <a href="{{ url_for('main.panel_logout') }}" style="color:var(--lime);">Cerrar sesión</a>
+  </p>
 
   <table class="panel-table">
     <thead>
       <tr>
         <th>Fecha</th>
         <th>Nombre</th>
-        <th>Clínica</th>
+        <th>negocio</th>
         <th>Email</th>
         <th>Teléfono</th>
         <th>Mensaje</th>

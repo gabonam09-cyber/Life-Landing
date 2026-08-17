@@ -2,8 +2,12 @@
 .venv/
 .venv
 
-# secretos y base de datos con leads: nunca deben subir
+# secretos y base de datos con leads: nunca deben subir.
+# El comodin cubre respaldos y variantes (.env.respaldo, .env.local, .env.viejo...),
+# que llevan los mismos secretos dentro. .env.example si sube: no tiene valores.
 .env
+.env.*
+!.env.example
 instance/
 
 # python

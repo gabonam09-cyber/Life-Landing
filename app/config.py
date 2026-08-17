@@ -1,6 +1,24 @@
 import os
 
 
+def usuarios_panel():
+    """Cuentas que pueden entrar al panel, como {usuario: hash de contrasena}.
+
+    Cada socio tiene la suya: ADMIN_USER / ADMIN_PASSWORD_HASH para la primera y
+    ADMIN_USER_2 / ADMIN_PASSWORD_HASH_2 (o _3, _4...) para las siguientes. Se
+    leen del entorno en cada consulta para no tener que reiniciar al agregar una.
+    """
+    cuentas = {}
+
+    for sufijo in [""] + [f"_{n}" for n in range(2, 11)]:
+        usuario = os.environ.get(f"ADMIN_USER{sufijo}", "").strip()
+        hash_clave = os.environ.get(f"ADMIN_PASSWORD_HASH{sufijo}", "").strip()
+        if usuario and hash_clave:
+            cuentas[usuario] = hash_clave
+
+    return cuentas
+
+
 def _normalizar_url_bd(url):
     """Adapta la URL de Postgres que entregan los hosts al formato de SQLAlchemy 2.
 
@@ -26,6 +44,10 @@ class Config:
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    # Acceso al panel. Cada socio tiene su propio usuario y su propia
+    # contrasena: ADMIN_USER / ADMIN_PASSWORD_HASH para el primero, y despues
+    # ADMIN_USER_2 / ADMIN_PASSWORD_HASH_2, _3, etc. Asi se agregan mas sin
+    # tocar codigo, solo variables de entorno.
     ADMIN_USER = os.environ.get("ADMIN_USER", "admin")
     ADMIN_PASSWORD_HASH = os.environ.get("ADMIN_PASSWORD_HASH")
 

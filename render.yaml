@@ -48,13 +48,11 @@ services:
       - key: URL_PANEL
         sync: false
 
-      # Cadena de conexion inyectada por la base de datos de abajo.
+      # Base de datos externa (Neon o Supabase, plan gratuito sin caducidad).
+      #
+      # Antes se usaba el Postgres gratuito de Render, pero ese caduca y al
+      # caducar se borra: los prospectos y el historico de metricas se perderian.
+      # La cadena de conexion se pega a mano en el panel de Render (Environment),
+      # por eso va con `sync: false` y no viaja en el repositorio.
       - key: DATABASE_URL
-        fromDatabase:
-          name: life-db
-          property: connectionString
-
-databases:
-  - name: life-db
-    plan: free
-    region: oregon
+        sync: false

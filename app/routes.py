@@ -1,15 +1,35 @@
 import os
 
-from flask import Blueprint, current_app, flash, redirect, render_template, request, session, url_for
-from werkzeug.security import check_password_hash
+import secrets
 
-from .extensions import limiter
+from flask import (Blueprint, current_app, flash, jsonify, redirect, render_template,
+                   request, send_file, session, url_for)
+from werkzeug.security import check_password_hash, generate_password_hash
+
+from .config import usuarios_panel
+from .exportar import construir_excel, nombre_archivo
+
+from .analitica import (clics_para_mapa, purgar_analitica_vieja, registrar_eventos,
+                        resumen_metricas)
+from .extensions import csrf, limiter
 from .forms import ContactForm, LoginForm
 from .models import Lead, db
 from .notificaciones import avisar_lead_nuevo
 from .security import login_requerido
 
 bp = Blueprint("main", __name__)
+
+# Hash de una contrasena aleatoria que nadie conoce. Se usa para que un intento
+# con usuario inexistente tarde lo mismo que uno con usuario real: si no, el
+# tiempo de respuesta revelaria que nombres estan dados de alta.
+_SENUELO = None
+
+
+def _hash_senuelo():
+    global _SENUELO
+    if _SENUELO is None:
+        _SENUELO = generate_password_hash(secrets.token_hex(16))
+    return _SENUELO
 
 # Proceso paso a paso del sistema life: primero entendemos, después ejecutamos.
 PROCESO = [
@@ -164,21 +184,46 @@ def contacto():
     return redirect(url_for("main.index"))
 
 
+@bp.route("/api/eventos", methods=["POST"])
+@csrf.exempt  # lo llama el propio navegador con sendBeacon, que no manda formulario
+@limiter.limit("60 per minute")  # limite propio: el general (50/hora) lo agotaria una visita
+def api_eventos():
+    """Recibe los lotes de metricas que manda analitica.js."""
+    # sendBeacon puede mandar el cuerpo como text/plain, asi que no se exige
+    # el Content-Type de JSON: se intenta parsear de todos modos.
+    datos = request.get_json(silent=True, force=True)
+
+    aceptado = registrar_eventos(
+        datos,
+        # Las visitas propias no deben contar en las metricas.
+        es_interna=bool(session.get("admin_autenticado")),
+        propio_host=request.host,
+    )
+
+    if not aceptado:
+        return jsonify({"ok": False}), 400
+
+    return jsonify({"ok": True}), 202
+
+
 @bp.route("/panel/login", methods=["GET", "POST"])
 @limiter.limit("5 per minute")  # frena intentos de fuerza bruta al login
 def panel_login():
     form = LoginForm()
 
     if form.validate_on_submit():
-        usuario_ok = form.usuario.data == current_app.config["ADMIN_USER"]
-        hash_configurado = current_app.config["ADMIN_PASSWORD_HASH"]
-        password_ok = bool(hash_configurado) and check_password_hash(
-            hash_configurado, form.contrasena.data
-        )
+        cuentas = usuarios_panel()
+        usuario = (form.usuario.data or "").strip()
 
-        if usuario_ok and password_ok:
+        # Si el usuario no existe se comprueba igual contra un hash señuelo: sin
+        # eso, un fallo instantaneo delataria que ese nombre no esta dado de alta.
+        hash_guardado = cuentas.get(usuario) or _hash_senuelo()
+        password_ok = check_password_hash(hash_guardado, form.contrasena.data)
+
+        if usuario in cuentas and password_ok:
             session.clear()
             session["admin_autenticado"] = True
+            session["admin_usuario"] = usuario
             return redirect(url_for("main.panel"))
 
         # Mensaje generico: no revelar si fallo el usuario o la contrasena
@@ -198,3 +243,56 @@ def panel_logout():
 def panel():
     leads = Lead.query.order_by(Lead.creado_en.desc()).all()
     return render_template("panel.html", leads=leads)
+
+
+@bp.route("/panel/descargar.xlsx")
+@login_requerido
+def panel_descargar():
+    """Todo el contenido del panel en un Excel: prospectos, visitas y clics."""
+    return send_file(
+        construir_excel(),
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        as_attachment=True,
+        download_name=nombre_archivo(),
+    )
+
+
+@bp.route("/salud")
+@limiter.exempt  # la pensa un vigilante externo cada pocos minutos
+def salud():
+    """Respuesta minima para comprobar que el servicio sigue en pie.
+
+    En el plan gratuito el servidor se duerme sin visitas; un servicio externo
+    puede llamar aqui cada pocos minutos para mantenerlo despierto. No devuelve
+    HTML ni ejecuta javascript, asi que no ensucia las metricas con visitas falsas.
+    """
+    return {"estado": "ok"}, 200
+
+
+@bp.route("/panel/metricas")
+@login_requerido
+def panel_metricas():
+    """Que hace la gente en la landing: origen, recorrido, video y mapa de clics."""
+    dias = request.args.get("dias", type=int, default=30)
+    if dias not in (7, 30, 90, 0):  # 0 = todo el historico
+        dias = 30
+
+    dispositivo = request.args.get("dispositivo", default="escritorio")
+    if dispositivo not in ("movil", "tablet", "escritorio"):
+        dispositivo = "escritorio"
+
+    # Ver tus propias visitas es util para probar que la medicion funciona.
+    internas = request.args.get("internas") == "1"
+
+    # Se aprovecha la visita al panel para tirar lo viejo: sin tareas programadas
+    # en el plan gratuito, este es el momento natural para hacer limpieza.
+    purgar_analitica_vieja(dias=90)
+
+    return render_template(
+        "panel_metricas.html",
+        m=resumen_metricas(dias=dias, incluir_internas=internas),
+        clics=clics_para_mapa(dias=dias, dispositivo=dispositivo, incluir_internas=internas),
+        dispositivo=dispositivo,
+        dias=dias,
+        internas=internas,
+    )

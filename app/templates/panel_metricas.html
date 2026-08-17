@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block title %}Métricas de la landing — life{% endblock %}
+{% block nav_links %}{% endblock %}
+{% block content %}
+
+<section style="border-top:none; padding-top: 50px;">
+  <div class="s-eyebrow">Panel privado · {{ session.get('admin_usuario', '') }}</div>
+  <h2>Qué hace la gente en la landing</h2>
+  <p class="s-sub">
+    <a href="{{ url_for('main.panel') }}" style="color:var(--lime);">Ver prospectos</a> ·
+    <a href="{{ url_for('main.panel_descargar') }}" style="color:var(--lime);">Descargar todo en Excel</a> ·
+    <a href="{{ url_for('main.panel_logout') }}" style="color:var(--lime);">Cerrar sesión</a>
+  </p>
+
+  {# --- Filtros --- #}
+  <div class="met-filtros">
+    <span class="met-filtro-label">Periodo</span>
+    {% for d, texto in [(7, '7 días'), (30, '30 días'), (90, '90 días'), (0, 'Todo')] %}
+      <a class="met-chip {% if dias == d %}met-chip--on{% endif %}"
+         href="{{ url_for('main.panel_metricas', dias=d, dispositivo=dispositivo, internas='1' if internas else None) }}">{{ texto }}</a>
+    {% endfor %}
+
+    <span class="met-filtro-label" style="margin-left:18px;">Mis visitas</span>
+    <a class="met-chip {% if internas %}met-chip--on{% endif %}"
+       href="{{ url_for('main.panel_metricas', dias=dias, dispositivo=dispositivo, internas='1' if not internas else None) }}">
+      {{ 'Incluidas' if internas else 'Excluidas' }}
+    </a>
+  </div>
+
+  {% if m.sin_datos %}
+    <div class="met-vacio">
+      <p><strong>Todavía no hay visitas registradas en este periodo.</strong></p>
+      <p>Abre la landing en una ventana privada (para no contar como visita interna),
+         navégala y vuelve aquí. Los datos aparecen en cuanto cierras o cambias de pestaña.</p>
+    </div>
+  {% else %}
+
+  {# --- Resumen --- #}
+  <div class="met-tarjetas">
+    <div class="met-tarjeta">
+      <span class="met-numero">{{ m.total }}</span>
+      <span class="met-etiqueta">visitas</span>
+    </div>
+    <div class="met-tarjeta">
+      <span class="met-numero">{{ m.duracion_media }}s</span>
+      <span class="met-etiqueta">duración media</span>
+    </div>
+    <div class="met-tarjeta">
+      <span class="met-numero">{{ m.scroll_medio }}%</span>
+      <span class="met-etiqueta">scroll medio</span>
+    </div>
+    <div class="met-tarjeta">
+      <span class="met-numero">{{ m.video.pct_play }}%</span>
+      <span class="met-etiqueta">le dan play al video</span>
+    </div>
+  </div>
+
+  {# --- Origen y dispositivo --- #}
+  <div class="met-columnas">
+    <div>
+      <h3 class="met-titulo">De dónde llegan</h3>
+      {% for o in m.origenes %}
+        <div class="met-fila">
+          <span class="met-nombre">{{ o.nombre }}</span>
+          <span class="met-barra"><i style="width: {{ o.pct }}%"></i></span>
+          <span class="met-valor">{{ o.sesiones }} · {{ o.pct }}%</span>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div>
+      <h3 class="met-titulo">Con qué entran</h3>
+      {% for d in m.dispositivos %}
+        <div class="met-fila">
+          <span class="met-nombre">{{ d.nombre }}</span>
+          <span class="met-barra"><i style="width: {{ d.pct }}%"></i></span>
+          <span class="met-valor">{{ d.sesiones }} · {{ d.pct }}%</span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {# --- Embudo de scroll --- #}
+  <h3 class="met-titulo" style="margin-top:46px;">Hasta dónde bajan</h3>
+  <p class="met-ayuda">
+    Qué porcentaje de visitas llegó a cada sección y cuántos segundos la tuvo en pantalla.
+    Donde cae mucho el porcentaje, ahí se te está yendo la gente.
+  </p>
+
+  {% for s in m.secciones %}
+    <div class="met-fila met-fila--seccion">
+      <span class="met-nombre met-nombre--ancho">{{ s.etiqueta }}</span>
+      <span class="met-barra"><i style="width: {{ s.pct }}%"></i></span>
+      <span class="met-valor">{{ s.pct }}% · {{ s.segundos_medios }}s</span>
+    </div>
+  {% endfor %}
+
+  {# --- Video --- #}
+  <h3 class="met-titulo" style="margin-top:46px;">El video</h3>
+  {% if m.video.con_play %}
+    <p class="met-ayuda">
+      {{ m.video.con_play }} de {{ m.total }} visitas le dieron play ({{ m.video.pct_play }}%).
+      En promedio ven el <strong>{{ m.video.retencion_media }}%</strong> del video y
+      {{ m.video.completaron }} lo terminaron casi entero.
+    </p>
+
+    {% if m.video.curva %}
+      <p class="met-ayuda">Dónde lo dejan:</p>
+      {% for tramo in m.video.curva %}
+        <div class="met-fila">
+          <span class="met-nombre">{{ tramo.desde }}–{{ tramo.hasta }}s</span>
+          <span class="met-barra"><i style="width: {{ tramo.pct }}%"></i></span>
+          <span class="met-valor">{{ tramo.sesiones }}</span>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% else %}
+    <p class="met-ayuda">Nadie le ha dado play al video en este periodo.</p>
+  {% endif %}
+
+  {# --- Mapa de clics --- #}
+  <h3 class="met-titulo" style="margin-top:46px;">Mapa de clics</h3>
+  <p class="met-ayuda">
+    Cada mancha es un clic. Móvil y escritorio se ven por separado porque la página
+    se acomoda distinto y las posiciones no son comparables entre sí.
+  </p>
+
+  <div class="met-filtros">
+    {% for dis, texto in [('escritorio', 'Escritorio'), ('movil', 'Móvil'), ('tablet', 'Tablet')] %}
+      <a class="met-chip {% if dispositivo == dis %}met-chip--on{% endif %}"
+         href="{{ url_for('main.panel_metricas', dias=dias, dispositivo=dis, internas='1' if internas else None) }}#mapa">{{ texto }}</a>
+    {% endfor %}
+    <span class="met-filtro-label">{{ clics|length }} clics</span>
+  </div>
+
+  <div id="mapa" class="met-mapa" data-ancho-base="1320">
+    {% if clics %}
+      <iframe class="met-mapa-pagina" src="{{ url_for('main.index') }}" title="Landing" scrolling="no"></iframe>
+      <div class="met-mapa-puntos"></div>
+    {% else %}
+      <p class="met-ayuda" style="padding: 30px;">
+        Todavía no hay clics registrados desde {{ dispositivo }}.
+      </p>
+    {% endif %}
+  </div>
+
+  {# Los datos viajan como JSON, no como script ejecutable: la politica de
+     seguridad del sitio no permite codigo escrito dentro del HTML. #}
+  <script type="application/json" id="datos-clics">{{ clics|tojson }}</script>
+
+  {% endif %}
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/panel_metricas.js') }}"></script>
+{% endblock %}

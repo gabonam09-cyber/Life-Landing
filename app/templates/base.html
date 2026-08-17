@@ -14,11 +14,15 @@
 
 <nav>
   <div class="nav-mark">life</div>
+  {# Las paginas del panel dejan este bloque vacio: son enlaces a la landing y
+     ahi dentro no pintan nada. #}
+  {% block nav_links %}
   <div class="nav-links">
     <a href="/#servicios">Servicios</a>
     <a href="/#nosotros">Nosotros</a>
     <a href="/#contacto">Contacto</a>
   </div>
+  {% endblock %}
 </nav>
 
 <div class="wrap">
@@ -37,6 +41,10 @@
 <script src="{{ url_for('static', filename='js/vendor/ScrollTrigger.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/vendor/lenis.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+{# Scripts propios de cada pagina: la analitica solo debe correr en la landing,
+   nunca en el panel, para no medirte a ti mismo trabajando. #}
+{% block scripts %}{% endblock %}
 
 </body>
 </html>

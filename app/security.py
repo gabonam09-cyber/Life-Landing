@@ -9,7 +9,10 @@ def registrar_headers_seguridad(app):
     @app.after_request
     def _headers(resp):
         resp.headers["X-Content-Type-Options"] = "nosniff"
-        resp.headers["X-Frame-Options"] = "DENY"
+        # SAMEORIGIN y no DENY: el mapa de calor del panel necesita mostrar la
+        # landing dentro de un iframe para dibujar los clics encima. Sigue
+        # bloqueado que cualquier sitio ajeno enmarque la pagina.
+        resp.headers["X-Frame-Options"] = "SAMEORIGIN"
         resp.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
         resp.headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()"
         # HSTS: fuerza HTTPS en el navegador una vez visitado por primera vez
@@ -21,7 +24,7 @@ def registrar_headers_seguridad(app):
             "font-src 'self' https://fonts.gstatic.com; "
             "img-src 'self' data:; "
             "script-src 'self'; "
-            "frame-ancestors 'none'"
+            "frame-ancestors 'self'"
         )
         return resp
 
